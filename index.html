@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automating B2B SaaS Renewal Risk | n8n Workflow Infographic</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <!-- 
+        PALETTE: "Vibrant Cyber-SaaS"
+        Primary: #4F46E5 (Indigo)
+        Secondary: #EC4899 (Pink)
+        Tertiary: #06B6D4 (Cyan)
+        Background: #F3F4F6 (Gray-100)
+        Card Bg: #FFFFFF (White)
+    -->
+
+    <!-- 
+        NARRATIVE PLAN:
+        1. Introduction: Define the problem (Churn) and the solution (n8n Automation).
+        2. Architecture: Visual flow of data from HubSpot/Zendesk/DB into n8n.
+        3. The Brain (Logic): Visualize how the Risk Score is calculated (Inputs & Weights).
+        4. Simulation Results: Visualize the output of the workflow on a mock dataset.
+        5. Conclusion: Benefits of the automation.
+    -->
+
+    <!--
+        CHART SELECTION JUSTIFICATION (NO SVG):
+        1. Flow Diagram -> Goal: Organize/Process -> HTML/CSS Grid & Flexbox (Canvas/SVG avoided per instructions).
+        2. Scoring Weights -> Goal: Inform/Proportion -> Chart.js Donut (Canvas).
+        3. Risk Distribution -> Goal: Compare/Composition -> Chart.js Pie (Canvas).
+        4. Risk Factor Correlation -> Goal: Relationships (3 Variables) -> Plotly.js 3D Scatter (WebGL/Canvas).
+        5. Alert Trend -> Goal: Change over time -> Chart.js Line (Canvas).
+    -->
+
+    <!-- CONFIRMATION: NEITHER Mermaid JS NOR SVG were used anywhere in the output. -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6;
+            color: #1F2937;
+        }
+
+        /* Chart Container Styling Rules */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px; /* Base height */
+            max-height: 400px;
+        }
+
+        .chart-container-tall {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 500px;
+            max-height: 600px;
+        }
+
+        /* Custom Scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4F46E5; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4338ca; 
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- HERO SECTION -->
+    <header class="bg-indigo-900 text-white py-12 px-4 shadow-xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div class="max-w-6xl mx-auto relative z-10 text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-pink-500 text-xs font-bold tracking-wider mb-4 uppercase">n8n Workflow Guide</span>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">Automating B2B SaaS <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500">Renewal Risk Management</span></h1>
+            <p class="text-lg md:text-xl text-indigo-200 max-w-3xl mx-auto">
+                Proactively flag high-value customers showing signs of churn by unifying data from CRM, Support, and Usage databases into a single automated "Risk Score."
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+
+        <!-- SECTION 1: THE ARCHITECTURE (FLOWCHART via HTML) -->
+        <section id="architecture" class="bg-white rounded-2xl shadow-lg p-6 md:p-10 border-t-4 border-cyan-500">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">The Automation Architecture</h2>
+                <p class="text-gray-600">
+                    Siloed data is the enemy of Customer Success. This workflow triggers daily, aggregating data points from three distinct sources to form a holistic view of customer health.
+                </p>
+            </div>
+
+            <!-- HTML-Based Flow Diagram (Replacing Mermaid/SVG) -->
+            <div class="relative w-full overflow-x-auto pb-4">
+                <div class="min-w-[800px] flex flex-col md:flex-row justify-between items-stretch gap-4 md:gap-2">
+                    
+                    <!-- Trigger -->
+                    <div class="flex flex-col items-center justify-center flex-1">
+                        <div class="bg-gray-800 text-white p-4 rounded-lg shadow-md w-full text-center border-2 border-gray-600">
+                            <div class="text-2xl mb-1">⏰</div>
+                            <div class="font-bold">8:00 AM Trigger</div>
+                            <div class="text-xs text-gray-400">Schedule Node</div>
+                        </div>
+                        <div class="text-indigo-500 text-4xl font-bold my-2 transform md:rotate-[-90deg]">↓</div>
+                    </div>
+
+                    <!-- Step 1: CRM -->
+                    <div class="flex flex-col items-center justify-center flex-1">
+                        <div class="bg-orange-50 text-orange-900 p-4 rounded-lg shadow-md w-full text-center border-2 border-orange-400">
+                            <div class="text-2xl mb-1">🏢</div>
+                            <div class="font-bold">Fetch CRM</div>
+                            <div class="text-xs">HubSpot/Salesforce</div>
+                            <div class="mt-2 text-xs bg-white p-1 rounded border border-orange-200">
+                                Filter: Renewal in 90 Days
+                            </div>
+                        </div>
+                        <div class="text-indigo-500 text-4xl font-bold my-2 md:hidden">↓</div>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="hidden md:flex items-center justify-center">
+                        <span class="text-indigo-500 text-3xl font-bold">→</span>
+                    </div>
+
+                    <!-- Step 2: Support -->
+                    <div class="flex flex-col items-center justify-center flex-1">
+                        <div class="bg-green-50 text-green-900 p-4 rounded-lg shadow-md w-full text-center border-2 border-green-400">
+                            <div class="text-2xl mb-1">🎫</div>
+                            <div class="font-bold">Fetch Support</div>
+                            <div class="text-xs">Zendesk/Jira</div>
+                            <div class="mt-2 text-xs bg-white p-1 rounded border border-green-200">
+                                Count Open Tickets
+                            </div>
+                        </div>
+                        <div class="text-indigo-500 text-4xl font-bold my-2 md:hidden">↓</div>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="hidden md:flex items-center justify-center">
+                        <span class="text-indigo-500 text-3xl font-bold">→</span>
+                    </div>
+
+                    <!-- Step 3: Usage -->
+                    <div class="flex flex-col items-center justify-center flex-1">
+                        <div class="bg-blue-50 text-blue-900 p-4 rounded-lg shadow-md w-full text-center border-2 border-blue-400">
+                            <div class="text-2xl mb-1">📊</div>
+                            <div class="font-bold">Fetch Usage</div>
+                            <div class="text-xs">Postgres/Snowflake</div>
+                            <div class="mt-2 text-xs bg-white p-1 rounded border border-blue-200">
+                                Check Last Login
+                            </div>
+                        </div>
+                        <div class="text-indigo-500 text-4xl font-bold my-2 md:hidden">↓</div>
+                    </div>
+
+                    <!-- Arrow -->
+                    <div class="hidden md:flex items-center justify-center">
+                        <span class="text-indigo-500 text-3xl font-bold">→</span>
+                    </div>
+
+                    <!-- Processing -->
+                    <div class="flex flex-col items-center justify-center flex-1">
+                        <div class="bg-indigo-600 text-white p-4 rounded-lg shadow-md w-full text-center ring-4 ring-indigo-200">
+                            <div class="text-2xl mb-1">⚙️</div>
+                            <div class="font-bold">Calc Risk</div>
+                            <div class="text-xs">JavaScript Code Node</div>
+                            <div class="mt-2 text-xs bg-indigo-800 p-1 rounded">
+                                Score 0-100
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 bg-gray-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                <p class="text-sm text-gray-700"><strong>💡 Workflow Logic:</strong> The system merges these three disparate datasets. If the calculated risk score exceeds 50, it triggers an alert path; otherwise, the customer is marked as healthy.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 2: THE LOGIC (RISK SCORING) -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Logic Explanation -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-pink-500 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">The "Risk Score" Algorithm</h2>
+                    <p class="text-gray-600 mb-6">
+                        The JavaScript Code node assigns a weighted score. A score of <strong>50+</strong> is Critical.
+                    </p>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-red-100 text-red-600 font-bold rounded-full mr-3">1</span>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Low Utilization (< 30%)</h4>
+                                <p class="text-sm text-gray-500">The strongest indicator of churn. If active users / licenses is low, value isn't being realized.</p>
+                                <span class="inline-block mt-1 px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded">+50 Points</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-orange-100 text-orange-600 font-bold rounded-full mr-3">2</span>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Ghosting (> 30 Days)</h4>
+                                <p class="text-sm text-gray-500">No login activity in the last month indicates abandonment.</p>
+                                <span class="inline-block mt-1 px-2 py-0.5 bg-orange-100 text-orange-700 text-xs font-bold rounded">+40 Points</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-yellow-100 text-yellow-600 font-bold rounded-full mr-3">3</span>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Support Friction (> 5 Tickets)</h4>
+                                <p class="text-sm text-gray-500">High volume of open tickets suggests unresolved frustration.</p>
+                                <span class="inline-block mt-1 px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-bold rounded">+30 Points</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Weighting Visualization -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 border-t-4 border-pink-500">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Impact Weight Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="logicWeightChart"></canvas>
+                </div>
+                <p class="text-center text-xs text-gray-400 mt-2">
+                    Visualizing the contribution of each factor to the maximum potential risk score.
+                </p>
+            </div>
+
+        </section>
+
+        <!-- SECTION 3: SIMULATED RESULTS DASHBOARD -->
+        <section class="bg-white rounded-2xl shadow-lg p-6 md:p-10 border-t-4 border-indigo-500">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Simulated Automation Outcomes</h2>
+                <p class="text-gray-600">
+                    If this workflow ran on a dataset of <strong>100 accounts</strong> approaching renewal, here is how the risk landscape might look.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- KPI Card 1 -->
+                <div class="bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-xl p-6 text-white shadow-lg transform hover:scale-105 transition duration-300">
+                    <div class="text-indigo-200 text-sm font-bold uppercase tracking-wide">Total Renewals</div>
+                    <div class="text-5xl font-extrabold mt-2">100</div>
+                    <div class="text-indigo-100 text-xs mt-2">Processing next 90 days</div>
+                </div>
+
+                <!-- KPI Card 2 -->
+                <div class="bg-gradient-to-br from-pink-500 to-rose-600 rounded-xl p-6 text-white shadow-lg transform hover:scale-105 transition duration-300">
+                    <div class="text-pink-100 text-sm font-bold uppercase tracking-wide">High Risk Alert</div>
+                    <div class="text-5xl font-extrabold mt-2">18%</div>
+                    <div class="text-pink-100 text-xs mt-2">Score > 50 (Immediate Action)</div>
+                </div>
+
+                <!-- KPI Card 3 -->
+                <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl p-6 text-white shadow-lg transform hover:scale-105 transition duration-300">
+                    <div class="text-cyan-100 text-sm font-bold uppercase tracking-wide">Healthy</div>
+                    <div class="text-5xl font-extrabold mt-2">62%</div>
+                    <div class="text-cyan-100 text-xs mt-2">Score < 20 (Auto-Renew Likely)</div>
+                </div>
+
+            </div>
+
+            <!-- Advanced Data Visualization -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+                
+                <!-- 3D SCATTER PLOT (Plotly) -->
+                <div class="col-span-1">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Multi-Factor Risk Analysis</h3>
+                    <p class="text-sm text-gray-500 mb-4">
+                        A 3D view identifying the "Danger Zone". Red dots represent High Risk accounts characterized by low utilization, high tickets, or high days since login.
+                    </p>
+                    <div id="plotlyRiskCluster" class="chart-container-tall border border-gray-100 rounded-lg shadow-inner bg-gray-50"></div>
+                </div>
+
+                <!-- DISTRIBUTION & TRENDS (Chart.js) -->
+                <div class="col-span-1 flex flex-col space-y-8">
+                    
+                    <!-- Pie Chart -->
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Portfolio Health Segmentation</h3>
+                        <p class="text-sm text-gray-500 mb-4">Breakdown of the 100 accounts based on the calculated Risk Score.</p>
+                        <div class="chart-container" style="height: 250px;">
+                            <canvas id="riskDistributionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Line Chart -->
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Risk Detection Trend (Last 7 Days)</h3>
+                        <p class="text-sm text-gray-500 mb-4">Number of "High Risk" alerts generated by the workflow daily.</p>
+                        <div class="chart-container" style="height: 200px;">
+                            <canvas id="alertTrendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ACTIONS SECTION -->
+        <section class="bg-white rounded-2xl shadow-lg p-6 md:p-10 border-t-4 border-indigo-900 mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">The Output: Automated Action</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <p class="text-gray-600 text-lg mb-4">
+                        When the logic router identifies a "High Risk" customer, n8n executes immediate interventions without human delay.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <span class="text-2xl mr-4">💬</span>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Slack Alert</h4>
+                                <p class="text-sm text-gray-500">Posts to #churn-alerts with Score & Reasons.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+                            <span class="text-2xl mr-4">📝</span>
+                            <div>
+                                <h4 class="font-bold text-gray-800">CRM Update</h4>
+                                <p class="text-sm text-gray-500">Sets status to "At Risk" & creates an Urgent Task.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mock Slack Message using HTML/Tailwind -->
+                <div class="bg-gray-800 text-white p-6 rounded-lg font-mono text-sm shadow-2xl border-l-4 border-red-500">
+                    <div class="flex items-center mb-3">
+                        <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                        <span class="font-bold text-red-400">Churn Bot</span>
+                        <span class="text-gray-500 text-xs ml-2">Today at 8:05 AM</span>
+                    </div>
+                    <p class="mb-2">🚨 <strong class="text-white">Renewal Risk Alert: Acme Corp</strong></p>
+                    <div class="pl-2 border-l-2 border-gray-600 text-gray-300">
+                        <p><strong>Risk Score:</strong> 90</p>
+                        <p><strong>Reasons:</strong> Low Utilization (10%), No logins in 45 days</p>
+                        <p class="mt-2 text-blue-400 underline cursor-pointer">View in HubSpot</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-gray-400 py-8 text-center">
+        <p class="text-sm">Generated for n8n.io Tutorial Guide. Visualizing Automated Risk Management.</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- UTILITY: Label Wrapping Function (16 char limit) ---
+        function splitLabel(label) {
+            if (label.length <= 16) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length < 16) {
+                    currentLine += " " + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // --- UTILITY: Tooltip Configuration (Mandatory) ---
+        const commonTooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            }
+        };
+
+        // --- CHART 1: Logic Weights (Donut) ---
+        const ctxLogic = document.getElementById('logicWeightChart').getContext('2d');
+        const rawLabelsLogic = ['Low Utilization (<30%)', 'Ghosting (>30 Days)', 'High Support (>5 Tix)'];
+        const processedLabelsLogic = rawLabelsLogic.map(splitLabel);
+
+        new Chart(ctxLogic, {
+            type: 'doughnut',
+            data: {
+                labels: processedLabelsLogic,
+                datasets: [{
+                    data: [50, 40, 30], // The weights from the code logic
+                    backgroundColor: [
+                        '#4F46E5', // Indigo (Utilization - Highest)
+                        '#EC4899', // Pink (Ghosting - High)
+                        '#06B6D4'  // Cyan (Support - Medium)
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: commonTooltipConfig
+                },
+                cutout: '60%'
+            }
+        });
+
+        // --- CHART 2: Risk Distribution (Pie) ---
+        const ctxDist = document.getElementById('riskDistributionChart').getContext('2d');
+        const rawLabelsDist = ['High Risk (Action Req)', 'At Risk (Monitor)', 'Healthy (Safe)'];
+        const processedLabelsDist = rawLabelsDist.map(splitLabel);
+
+        new Chart(ctxDist, {
+            type: 'pie',
+            data: {
+                labels: processedLabelsDist,
+                datasets: [{
+                    data: [18, 20, 62],
+                    backgroundColor: [
+                        '#F43F5E', // Red/Rose
+                        '#F59E0B', // Amber
+                        '#10B981'  // Emerald
+                    ],
+                    borderWidth: 1,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right' },
+                    tooltip: commonTooltipConfig
+                }
+            }
+        });
+
+        // --- CHART 3: Alert Trend (Line) ---
+        const ctxTrend = document.getElementById('alertTrendChart').getContext('2d');
+        // Labels are short dates, no wrapping needed usually, but applying for consistency
+        const rawLabelsTrend = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        const processedLabelsTrend = rawLabelsTrend.map(splitLabel);
+
+        new Chart(ctxTrend, {
+            type: 'line',
+            data: {
+                labels: processedLabelsTrend,
+                datasets: [{
+                    label: 'High Risk Alerts Triggered',
+                    data: [2, 1, 5, 0, 3, 1, 0],
+                    borderColor: '#4F46E5',
+                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#EC4899',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: commonTooltipConfig
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+
+        // --- CHART 4: 3D Risk Cluster (Plotly.js) ---
+        // Generating mock data for 50 companies
+        function generateData(count) {
+            let x = [], y = [], z = [], color = [], text = [];
+            
+            for(let i=0; i<count; i++) {
+                // Utilization 0-100%
+                let util = Math.floor(Math.random() * 100);
+                // Tickets 0-20
+                let tix = Math.floor(Math.random() * 15);
+                // Days since login 0-60
+                let days = Math.floor(Math.random() * 60);
+
+                // Calculate Risk Score based on logic to assign color
+                let score = 0;
+                if(util < 30) score += 50;
+                if(tix > 5) score += 30;
+                if(days > 30) score += 40;
+
+                x.push(util); // Utilization
+                y.push(tix);  // Tickets
+                z.push(days); // Recency
+                
+                // Color Logic
+                if (score >= 50) {
+                    color.push('#F43F5E'); // High Risk
+                    text.push(`High Risk (Score: ${score})`);
+                } else if (score >= 20) {
+                    color.push('#F59E0B'); // At Risk
+                    text.push(`At Risk (Score: ${score})`);
+                } else {
+                    color.push('#10B981'); // Healthy
+                    text.push(`Healthy (Score: ${score})`);
+                }
+            }
+            return {x, y, z, color, text};
+        }
+
+        const data3d = generateData(60);
+
+        const trace3d = {
+            x: data3d.x,
+            y: data3d.y,
+            z: data3d.z,
+            mode: 'markers',
+            marker: {
+                size: 8,
+                color: data3d.color,
+                opacity: 0.8
+            },
+            type: 'scatter3d',
+            text: data3d.text,
+            hoverinfo: 'text'
+        };
+
+        const layout3d = {
+            margin: { l: 0, r: 0, b: 0, t: 0 },
+            scene: {
+                xaxis: { title: 'Utilization (%)' },
+                yaxis: { title: 'Open Tickets' },
+                zaxis: { title: 'Days Inactive' },
+                camera: {
+                    eye: {x: 1.5, y: 1.5, z: 1.5}
+                }
+            },
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)'
+        };
+
+        const config3d = {
+            responsive: true,
+            displayModeBar: false
+        };
+
+        Plotly.newPlot('plotlyRiskCluster', [trace3d], layout3d, config3d);
+
+    </script>
+</body>
+</html>
